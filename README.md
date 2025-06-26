@@ -50,7 +50,7 @@ torchaudio=2.0.1
 
 ## 📚 Citation
 
-Please cite related papers if you use ADD-RSC.
+Please cite related papers if you use ADD4RSC.
 
 ```
 @article{dong2025adaptive,
