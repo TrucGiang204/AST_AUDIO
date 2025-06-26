@@ -45,28 +45,10 @@ torchaudio=2.0.1
 ```
 
 ### 4. 📊 Comparison of Our Method with State-of-the-Art on the ICBHI Dataset
-Model	Sp(%)	Se(%)	Score(%)
-LungRN+NL [1]	63.20	41.32	52.26
-RespireNet [2]	72.30	40.10	56.20
-Wang et al. (Splice) [3]	70.40	40.20	55.30
-StochNorm [4]	78.86	36.40	57.63
-CoTuning [4]	79.34	37.24	58.29
-Chang et al. [5]	69.92	35.85	52.89
-SCL [6]	75.95	39.15	57.55
-Ours (ResNet50)	83.76	34.18	58.97
-AFT on Mixed-500 [7]	80.72	42.86	61.79
-AST Fine-tuning [8]	77.14	41.97	59.55
-Patch-Mix CL [8]	81.66	43.07	62.37
-M2D [9]	81.51	45.08	63.29
-DAT [10]	77.11	42.50	59.81
-SG-SCL [10]	79.87	43.55	61.71
-RepAugment [11]	82.47	40.55	61.51
-BTS [12]	81.40	45.67	63.54
-MVST [13]	80.60	44.39	62.50
-LungAdapter [14]	80.43	44.37	62.40
-CycleGuardian [15]	82.06	44.47	63.26
-Ours (AST)	85.13	45.94	65.53
 
+<p align="center">
+  <img src="result.png" alt="result" width="600"/>
+</p>
 
 ## 📚 Citation
 
