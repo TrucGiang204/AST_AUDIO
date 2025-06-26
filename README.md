@@ -11,7 +11,24 @@ Dong Gaoyang, Zhang Zhicheng, Sun Ping and Zhang Minghui, "Adaptive Differential
 
 
 ## Overview
+Official implementation of the Adaptive Differential Denoising (ADD) network for robust respiratory sound classification. Integrates three key innovations:
+Adaptive Frequency Filter (AFF)
 
+Learns spectral masks with soft shrink (Sα(x) = sign(x) max{|x| - α, 0}) to retain diagnostic high-frequency components.
+
+Differential Denoise Layer (DDL)
+
+Uses Multi-Head Differential Attention (MHDA) to suppress noise via contrastive augmented views.
+
+Bias Denoising Loss
+
+Jointly optimizes classification and denoising without clean labels via label smoothing.
+
+Key Results:
+
+65.53% Score on ICBHI 2017 (SOTA, +1.99% over previous best).
+
+85.13% Specificity (Sp) and 45.94% Sensitivity (Se).
 
 
 
