@@ -47,12 +47,8 @@ torchaudio=2.0.1
 
 
 
-## Pre-trained models
 
-
-
-
-## Citation
+## 📚 Citation
 
 Please cite related papers if you use ADD-RSC.
 
@@ -63,7 +59,6 @@ Please cite related papers if you use ADD-RSC.
   journal={arXiv preprint arXiv:2506.02505},
   year={2025}
 }
-
 ```
 
 ## Acknowledgments
