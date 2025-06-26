@@ -11,24 +11,35 @@ Dong Gaoyang, Zhang Zhicheng, Sun Ping and Zhang Minghui, "Adaptive Differential
 
 
 ## Overview
-Official implementation of the Adaptive Differential Denoising (ADD) network for robust respiratory sound classification. Integrates three key innovations:
-Adaptive Frequency Filter (AFF)
+This repository contains the official implementation of the **Adaptive Differential Denoising (ADD)** network for robust respiratory sound classification. The method integrates three key innovations:
 
-Learns spectral masks with soft shrink (Sα(x) = sign(x) max{|x| - α, 0}) to retain diagnostic high-frequency components.
+1. **Adaptive Frequency Filter (AFF)**  
+   - Learns spectral masks with soft shrink: `Sα(x) = sign(x) max{|x| - α, 0}`
+   - Preserves diagnostic high-frequency components while eliminating noise
 
-Differential Denoise Layer (DDL)
+2. **Differential Denoise Layer (DDL)**  
+   - Uses Multi-Head Differential Attention (MHDA) mechanism
+   - Suppresses noise through contrastive augmented views
+   - Implements:  
+     `A = [σ(Q₁K₁ᵀ/√d) - λ·σ(Q₂K₂ᵀ/√d)]V`
 
-Uses Multi-Head Differential Attention (MHDA) to suppress noise via contrastive augmented views.
+3. **Bias Denoising Loss**  
+   - Jointly optimizes classification and denoising
+   - Uses label smoothing: `L = -Σ[y_c(1-ε) + ε/C]·log[ϕ(Norm(p))]`
+   - No clean labels required
 
-Bias Denoising Loss
+**Key Results**:
+- 🏆 **65.53% Score** on ICBHI 2017 (SOTA)
+- 📈 **+1.99%** improvement over previous best
+- 🔍 **85.13% Specificity (Sp)** | **45.94% Sensitivity (Se)**
 
-Jointly optimizes classification and denoising without clean labels via label smoothing.
-
-Key Results:
-
-65.53% Score on ICBHI 2017 (SOTA, +1.99% over previous best).
-
-85.13% Specificity (Sp) and 45.94% Sensitivity (Se).
+## Data
+### ICBHI 2017 Respiratory Sound Database
+- **Download**: [Official Challenge Page](https://bhichallenge.med.auth.gr/ICBHI_2017_Challenge)
+- **Characteristics**:
+  - 126 subjects with real-world recordings
+  - Contains heart sounds, ambient noise, and transducer artifacts
+  - Sampling rates: 4kHz-44.1kHz → resampled to 16kHz
 
 
 
