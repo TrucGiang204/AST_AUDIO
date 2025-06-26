@@ -52,7 +52,7 @@ transformers=4.24.0
 
 ## Citation
 
-Please cite related papers if you use DPHuBERT.
+Please cite related papers if you use ADD-RSC.
 
 ```
 @article{dong2025adaptive,
