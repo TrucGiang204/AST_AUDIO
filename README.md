@@ -23,8 +23,7 @@ Automated respiratory sound classification faces practical challenges from backg
 
 
 ### 1. 📦 Download and prepare audio data
-#### ICBHI 2017 Respiratory Sound Database
-- **Download**: [Official Challenge Page](https://bhichallenge.med.auth.gr/ICBHI_2017_Challenge)
+- **Download**: ICBHI 2017 Respiratory Sound Database [Official Challenge Page](https://bhichallenge.med.auth.gr/ICBHI_2017_Challenge)
 - **Characteristics**:
   - 126 subjects with real-world recordings
   - Contains heart sounds, ambient noise, and transducer artifacts
