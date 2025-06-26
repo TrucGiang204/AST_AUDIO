@@ -36,7 +36,6 @@ Our code is based on PyTorch. Please install these required packages from their 
 pytorch=2.0.1
 cuda=11.7
 torchaudio=2.0.1
-
 ```
 
 
