@@ -1,4 +1,4 @@
-# ADD-RSC
+# ADD-RSC(Refactoring the codebase)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/adaptive-differential-denoising-for/audio-classification-on-icbhi-respiratory)](https://paperswithcode.com/sota/audio-classification-on-icbhi-respiratory?p=adaptive-differential-denoising-for)
 
 This repo contains the code and models for our paper: 
