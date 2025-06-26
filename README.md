@@ -22,8 +22,8 @@ Automated respiratory sound classification faces practical challenges from backg
 
 
 
-### 1. Download and prepare audio data
-### 📦ICBHI 2017 Respiratory Sound Database
+### 1. 📦 Download and prepare audio data
+#### ICBHI 2017 Respiratory Sound Database
 - **Download**: [Official Challenge Page](https://bhichallenge.med.auth.gr/ICBHI_2017_Challenge)
 - **Characteristics**:
   - 126 subjects with real-world recordings
@@ -31,11 +31,11 @@ Automated respiratory sound classification faces practical challenges from backg
   - Sampling rates: 4kHz-44.1kHz → resampled to 16kHz
 
 
-### 2. Download pre-trained model
+### 2. 🤖 Download pre-trained model
 You can download the pretrained AST model from [Hugging Face](https://huggingface.co/MIT/ast-finetuned-audioset-10-10-0.4593).
 
 
-### 3. 🧠Start training
+### 3. 🧠 Start training
 Our code is based on PyTorch. Please install these required packages from their official sources. We include our versions below for reference, but other versions might also work.
 
 ```
