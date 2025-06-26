@@ -13,6 +13,10 @@ Dong Gaoyang, Zhang Zhicheng, Sun Ping and Zhang Minghui, "Adaptive Differential
 ## Overview
 Automated respiratory sound classification faces practical challenges from background noise and insufficient denoising in existing systems. We propose **A**daptive **D**ifferential **D**enoising network for **R**espiratory **S**ounds **C**lassification (**ADD4RSC**), that integrates noise suppression and pathological feature preservation via three innovations: 1) **Adaptive Frequency Filter** with learnable spectral masks and soft shrink to eliminate noise while retaining diagnostic high-frequency components; 2) A **Differential Denoise Layer** using differential attention to reduce noise-induced variations through augmented sample comparisons; 3) A **bias denoising loss** jointly optimizing classification and robustness without clean labels. Experiments on the ICBHI2017 dataset show that our method achieves `65.53%` of the Score, which is improved by `1.99%` over the previous sota method.
 
+<p align="center">
+  <img src="fig_0216.png" alt="ADD4RSC model architecture" width="600"/>
+</p>
+
 ## Data
 ### ICBHI 2017 Respiratory Sound Database
 - **Download**: [Official Challenge Page](https://bhichallenge.med.auth.gr/ICBHI_2017_Challenge)
