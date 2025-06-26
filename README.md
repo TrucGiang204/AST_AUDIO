@@ -11,27 +11,7 @@ Dong Gaoyang, Zhang Zhicheng, Sun Ping and Zhang Minghui, "Adaptive Differential
 
 
 ## Overview
-This repository contains the official implementation of the **Adaptive Differential Denoising (ADD)** network for robust respiratory sound classification. The method integrates three key innovations:
-
-1. **Adaptive Frequency Filter (AFF)**  
-   - Learns spectral masks with soft shrink: `Sα(x) = sign(x) max{|x| - α, 0}`
-   - Preserves diagnostic high-frequency components while eliminating noise
-
-2. **Differential Denoise Layer (DDL)**  
-   - Uses Multi-Head Differential Attention (MHDA) mechanism
-   - Suppresses noise through contrastive augmented views
-   - Implements:  
-     `A = [σ(Q₁K₁ᵀ/√d) - λ·σ(Q₂K₂ᵀ/√d)]V`
-
-3. **Bias Denoising Loss**  
-   - Jointly optimizes classification and denoising
-   - Uses label smoothing: `L = -Σ[y_c(1-ε) + ε/C]·log[ϕ(Norm(p))]`
-   - No clean labels required
-
-**Key Results**:
-- 🏆 **65.53% Score** on ICBHI 2017 (SOTA)
-- 📈 **+1.99%** improvement over previous best
-- 🔍 **85.13% Specificity (Sp)** | **45.94% Sensitivity (Se)**
+Automated respiratory sound classification faces practical challenges from background noise and insufficient denoising in existing systems. We propose **A**daptive **D**ifferential **D**enoising network, that integrates noise suppression and pathological feature preservation via three innovations: 1) **Adaptive Frequency Filter** with learnable spectral masks and soft shrink to eliminate noise while retaining diagnostic high-frequency components; 2) A **Differential Denoise Layer** using differential attention to reduce noise-induced variations through augmented sample comparisons; 3) A **bias denoising loss** jointly optimizing classification and robustness without clean labels. Experiments on the ICBHI2017 dataset show that our method achieves 65.53% of the Score, which is improved by 1.99% over the previous sota method.
 
 ## Data
 ### ICBHI 2017 Respiratory Sound Database
