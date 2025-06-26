@@ -17,7 +17,12 @@ Automated respiratory sound classification faces practical challenges from backg
   <img src="fig_0216.png" alt="ADD4RSC model architecture" width="600"/>
 </p>
 
-## Data
+
+## Usage
+
+
+
+### 1. Download and prepare audio data
 ### ICBHI 2017 Respiratory Sound Database
 - **Download**: [Official Challenge Page](https://bhichallenge.med.auth.gr/ICBHI_2017_Challenge)
 - **Characteristics**:
@@ -26,9 +31,11 @@ Automated respiratory sound classification faces practical challenges from backg
   - Sampling rates: 4kHz-44.1kHz → resampled to 16kHz
 
 
+### 2. Download pre-trained model
+You can download the pretrained AST model from [Hugging Face](https://huggingface.co/MIT/ast-finetuned-audioset-10-10-0.4593).
 
-## Requirements
 
+### 3. 🧠Start training
 Our code is based on PyTorch. Please install these required packages from their official sources. We include our versions below for reference, but other versions might also work.
 
 ```
@@ -37,22 +44,6 @@ pytorch=2.0.1
 cuda=11.7
 torchaudio=2.0.1
 ```
-
-
-## Usage
-
-
-
-### 1. Download and prepare audio data
-
-
-
-### 2. Download pre-trained SSL (e.g., HuBERT Base) and convert it to our format
-
-
-
-### 3. Start training
-
 
 
 
