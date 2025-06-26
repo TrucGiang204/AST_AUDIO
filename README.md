@@ -55,13 +55,11 @@ transformers=4.24.0
 Please cite related papers if you use DPHuBERT.
 
 ```
-@inproceedings{peng23c_interspeech,
-  author={Yifan Peng and Yui Sudo and Shakeel Muhammad and Shinji Watanabe},
-  title={{DPHuBERT: Joint Distillation and Pruning of Self-Supervised Speech Models}},
-  year=2023,
-  booktitle={Proc. INTERSPEECH 2023},
-  pages={62--66},
-  doi={10.21437/Interspeech.2023-1213}
+@article{dong2025adaptive,
+  title={Adaptive Differential Denoising for Respiratory Sounds Classification},
+  author={Dong, Gaoyang and Zhang, Zhicheng and Sun, Ping and Zhang, Minghui},
+  journal={arXiv preprint arXiv:2506.02505},
+  year={2025}
 }
 
 ```
