@@ -29,18 +29,14 @@ Automated respiratory sound classification faces practical challenges from backg
 
 ## Requirements
 
-Our code is based on PyTorch, TorchAudio, and PyTorch Lightning. Please install these required packages from their official sources. We include our versions below for reference, but other versions might also work.
+Our code is based on PyTorch. Please install these required packages from their official sources. We include our versions below for reference, but other versions might also work.
 
 ```
 # Main packages for training
-pytorch=1.13.1
-cuda=11.6.2
-pytorch-lightning=1.8.1
-torchaudio=0.13.1
+pytorch=2.0.1
+cuda=11.7
+torchaudio=2.0.1
 
-# Other packages for obtaining pre-trained SSL
-fairseq=0.12.2
-transformers=4.24.0
 ```
 
 
