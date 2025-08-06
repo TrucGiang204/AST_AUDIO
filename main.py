@@ -8,32 +8,29 @@ warnings.filterwarnings("ignore")
 import math
 import time
 import random
-import pickle
 import argparse
 import numpy as np
-from label_ce import LabelSmoothingLoss
 import torch
 import torch.nn as nn
-import torch.optim as optim
 import torch.backends.cudnn as cudnn
 from torchvision import transforms
-
+from models.resnet import ResNet50
+from models.ast import ASTModel
 from util.icbhi_dataset import ICBHIDataset
 from util.icbhi_util import get_score
 from util.augmentation import SpecAugment
 from util.misc import adjust_learning_rate, warmup_learning_rate, set_optimizer, update_moving_average
 from util.misc import AverageMeter, accuracy, save_model, update_json
-from models import get_backbone_class, Projector
-from models.difftransformer import DiffTransformerLayer
-
+from models.adapt_diff_denoise import DiffTransformerLayer
+from models.bias_denoise_loss import LabelSmoothingLoss
 def parse_args():
-    parser = argparse.ArgumentParser('argument for supervised training')
+    parser = argparse.ArgumentParser('argument for ADD training')
 
     parser.add_argument('--seed', type=int, default=0)
     parser.add_argument('--print_freq', type=int, default=10)
     parser.add_argument('--save_freq', type=int, default=100)
-    parser.add_argument('--save_dir', type=str, default='./save/')
-    parser.add_argument('--tag', type=str, default='default',
+    parser.add_argument('--save_dir', type=str, default='./save')
+    parser.add_argument('--tag', type=str, default='train_resnet',
                         help='tag for experiment name')
     parser.add_argument('--resume', type=str, default=None,
                         help='path of model checkpoint to resume')
@@ -58,14 +55,10 @@ def parse_args():
                         help='warmup epochs')
     parser.add_argument('--weighted_loss', action='store_true',
                         help='weighted cross entropy loss (higher weights on abnormal class)')
-    parser.add_argument('--mix_beta', default=1.0, type=float,
-                        help='patch-mix interpolation coefficient')
-    parser.add_argument('--time_domain', action='store_true',
-                        help='patchmix for the specific time domain')
 
     # dataset
     parser.add_argument('--dataset', type=str, default='icbhi')
-    parser.add_argument('--data_folder', type=str, default='./data/ICBHI/ICBHI_final_database')
+    parser.add_argument('--data_folder', type=str, default='/home/respiration/Desktop/DGY/RSC-LoRA/data/ICBHI/ICBHI_final_database')
     parser.add_argument('--batch_size', type=int, default=8)
     parser.add_argument('--num_workers', type=int, default=8)
     # icbhi dataset
@@ -102,55 +95,38 @@ def parse_args():
     parser.add_argument('--specaug_mask', type=str, default='mean', 
                         help='specaug mask value', choices=['mean', 'zero'])
 
+    # denoise model
+    parser.add_argument("--denoise_d_model", type=int, default=256, help="Hidden size of the denoising transformer")
+    parser.add_argument("--denoise_num_heads", type=int, default=8, help="Number of attention heads in denoising transformer")
+    parser.add_argument("--denoise_depth", type=int, default=6, help="Number of layers in the denoising transformer")
+    parser.add_argument('--loss_beta', type=float, default=0.5, help='Weight for denoise loss in total loss')
+
     # model
-    parser.add_argument('--model', type=str, default='ast')
+
+    parser.add_argument('--model', type=str, default='resnet50',help="model selection: ast or resnet50")
     parser.add_argument('--pretrained', action='store_true')
+
     parser.add_argument('--pretrained_ckpt', type=str, default=None,
                         help='path to pre-trained encoder model')
-    parser.add_argument('--from_sl_official', default=True,
-                        help='load from supervised imagenet-pretrained model (official PyTorch)')
     parser.add_argument('--ma_update', default=True,
                         help='whether to use moving average update for model')
     parser.add_argument('--ma_beta', type=float, default=0.5,
                         help='moving average value')
-    # for AST
     parser.add_argument('--audioset_pretrained', default=True,
-                        help='load from imagenet- and audioset-pretrained model')
-    # for SSAST
-    parser.add_argument('--ssast_task', type=str, default='ft_avgtok', 
-                        help='pretraining or fine-tuning task', choices=['ft_avgtok', 'ft_cls'])
-    parser.add_argument('--fshape', type=int, default=16, 
-                        help='fshape of SSAST')
-    parser.add_argument('--tshape', type=int, default=16, 
-                        help='tshape of SSAST')
-    parser.add_argument('--ssast_pretrained_type', type=str, default='Patch', 
-                        help='pretrained ckpt version of SSAST model')
+                        help='load from audioset-pretrained model')
+    parser.add_argument("--audioset_ckpt", type=str, default="/home/respiration/Desktop/DGY/respire_classfiction/MVST-main/pretrained_models/audioset_10_10_0.4593.pth",
+                    help="Path to the AudioSet+ImageNet pretrained checkpoint for AST")
 
-    parser.add_argument('--method', type=str, default='ce')
-    # Patch-Mix CL loss
-    parser.add_argument('--proj_dim', type=int, default=768)
-    parser.add_argument('--temperature', type=float, default=0.06)
-    parser.add_argument('--alpha', type=float, default=1.0)
-    parser.add_argument('--negative_pair', type=str, default='all',
-                        help='the method for selecting negative pair', choices=['all', 'diff_label'])
-    parser.add_argument('--target_type', type=str, default='grad_block',
-                        help='how to make target representation', choices=['grad_block', 'grad_flow', 'project_block', 'project_flow'])
-
-    #args = parser.parse_args()
-    
     args = parser.parse_args(args=[])
     iterations = args.lr_decay_epochs.split(',')
     args.lr_decay_epochs = list([])
     for it in iterations:
         args.lr_decay_epochs.append(int(it))
     
-    args.model_name = '{}_{}_{}'.format(args.dataset, args.model, args.method)
+    args.model_name = '{}_{}'.format(args.dataset, args.model)
     if args.tag:
         args.model_name += '_{}'.format(args.tag)
 
-    if args.method in ['patchmix', 'patchmix_cl']:
-        assert args.model in ['ast', 'ssast']
-    
     args.save_folder = os.path.join(args.save_dir, args.model_name)
     if not os.path.isdir(args.save_folder):
         os.makedirs(args.save_folder)
@@ -203,8 +179,6 @@ def set_loader(args):
                             transforms.Resize(size=(int(args.h * args.resz), int(args.w * args.resz)))]
         val_transform = [transforms.ToTensor(),
                         transforms.Resize(size=(int(args.h * args.resz), int(args.w * args.resz)))]                        
-        # train_transform.append(transforms.Normalize(mean=mean, std=std))
-        # val_transform.append(transforms.Normalize(mean=mean, std=std))
         
         train_transform = transforms.Compose(train_transform)
         val_transform = transforms.Compose(val_transform)
@@ -235,23 +209,33 @@ def set_loader(args):
 
 
 def set_model(args):    
-    kwargs = {}
+
+    bias_denoise_encoder = DiffTransformerLayer(
+        d_model=args.denoise_d_model,
+        num_heads=args.denoise_num_heads,
+        depth=args.denoise_depth
+    )
+
     if args.model == 'ast':
-        kwargs['input_fdim'] = int(args.h * args.resz)
-        kwargs['input_tdim'] = int(args.w * args.resz)
-        kwargs['label_dim'] = args.n_cls
-        kwargs['imagenet_pretrain'] = args.from_sl_official
-        kwargs['audioset_pretrain'] = args.audioset_pretrained
-        kwargs['mix_beta'] = args.mix_beta  # for Patch-MixCL
+        model = ASTModel(
+            input_fdim=int(args.h * args.resz),
+            input_tdim=int(args.w * args.resz),
+            label_dim=args.n_cls,
+            audioset_pretrain=args.audioset_pretrained,
+            pretrained_path=args.audioset_ckpt
+        )
+        classifier = deepcopy(model.mlp_head)
+    elif args.model == 'resnet50':
+        model = ResNet50()
+        classifier = nn.Linear(model.final_feat_dim, args.n_cls)
+    else:
+        raise ValueError(f"Unsupported model: {args.model}")
     
 
-    model = get_backbone_class(args.model)(**kwargs)    
-    classifier = nn.Linear(model.final_feat_dim, args.n_cls) if args.model not in ['ast', 'ssast'] else deepcopy(model.mlp_head)
-    bias_denoise_encoder = DiffTransformerLayer(d_model=256, num_heads=8, depth=6)
     if not args.weighted_loss:
         weights = None
         criterion = nn.CrossEntropyLoss()
-        bias_denoise_criterion = LabelSmoothingLoss()
+        denoise_criterion = LabelSmoothingLoss()
     else:
         weights = torch.tensor(args.class_nums, dtype=torch.float32)
         weights = 1.0 / (weights / weights.sum())
@@ -259,11 +243,8 @@ def set_model(args):
         
         criterion = nn.CrossEntropyLoss(weight=weights)
 
-    if args.model not in ['ast', 'ssast'] and args.from_sl_official:
-        model.load_sl_official_weights()
-        print('pretrained model loaded from PyTorch ImageNet-pretrained')
 
-    # load SSL pretrained checkpoint for linear evaluation
+    # load pretrained checkpoint for linear evaluation
     if args.pretrained and args.pretrained_ckpt is not None:
         ckpt = torch.load(args.pretrained_ckpt, map_location='cpu')
         state_dict = ckpt['model']
@@ -285,11 +266,9 @@ def set_model(args):
 
         print('pretrained model loaded from: {}'.format(args.pretrained_ckpt))
 
-    projector = Projector(model.final_feat_dim, args.proj_dim) if args.method == 'patchmix_cl' else nn.Identity()
 
-    if args.method == 'ce':
-        criterion = [criterion.cuda(), bias_denoise_criterion.cuda()]
-    
+    criterion = [criterion.cuda(), denoise_criterion.cuda()]
+
 
     if torch.cuda.device_count() > 1:
         model = torch.nn.DataParallel(model)
@@ -297,18 +276,16 @@ def set_model(args):
     model.cuda()
     bias_denoise_encoder.cuda()
     classifier.cuda()
-    projector.cuda()
     
-    optim_params = list(model.parameters()) + list(bias_denoise_encoder.parameters()) + list(classifier.parameters()) + list(projector.parameters())
+    optim_params = list(model.parameters()) + list(bias_denoise_encoder.parameters()) + list(classifier.parameters())
     optimizer = set_optimizer(args, optim_params)
 
-    return model, bias_denoise_encoder, classifier, projector, criterion, optimizer
+    return model, bias_denoise_encoder, classifier, criterion, optimizer
 
 
-def train(train_loader, model, bias_denoise_encoder, classifier, projector, criterion, optimizer, epoch, args, scaler=None):
+def train(train_loader, model, bias_denoise_encoder, classifier, criterion, optimizer, epoch, args, scaler=None):
     model.train()
     classifier.train()
-    projector.train()
     bias_denoise_encoder.train()
     batch_time = AverageMeter()
     data_time = AverageMeter()
@@ -320,7 +297,7 @@ def train(train_loader, model, bias_denoise_encoder, classifier, projector, crit
         if args.ma_update:
             # store the previous iter checkpoint
             with torch.no_grad():
-                ma_ckpt = [deepcopy(model.state_dict()), deepcopy(bias_denoise_encoder.state_dict()), deepcopy(classifier.state_dict()), deepcopy(projector.state_dict())]
+                ma_ckpt = [deepcopy(model.state_dict()), deepcopy(bias_denoise_encoder.state_dict()), deepcopy(classifier.state_dict())]
 
         data_time.update(time.time() - end)
 
@@ -331,7 +308,7 @@ def train(train_loader, model, bias_denoise_encoder, classifier, projector, crit
         warmup_learning_rate(args, epoch, idx, len(train_loader), optimizer)
 
         with torch.cuda.amp.autocast():
-            if args.method == 'ce':
+
                 images = images.squeeze(1)
                 denoise_images, denoise_feature  = bias_denoise_encoder(images)
                 denoise_images = denoise_images.unsqueeze(1)
@@ -339,9 +316,8 @@ def train(train_loader, model, bias_denoise_encoder, classifier, projector, crit
                 output = classifier(features)
                 denoise_loss = criterion[1](denoise_feature, labels)
                 class_loss = criterion[0](output, labels)
-                loss = denoise_loss + class_loss
+                loss = args.loss_beta * denoise_loss + (1 - args.loss_beta) * class_loss
 
-            
 
         losses.update(loss.item(), bsz)
         [acc1], _ = accuracy(output[:bsz], labels, topk=(1,))
@@ -350,9 +326,6 @@ def train(train_loader, model, bias_denoise_encoder, classifier, projector, crit
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        # scaler.scale(loss).backward()
-        # scaler.step(optimizer)
-        # scaler.update()
     
         # measure elapsed time
         batch_time.update(time.time() - end)
@@ -364,7 +337,6 @@ def train(train_loader, model, bias_denoise_encoder, classifier, projector, crit
                 model = update_moving_average(args.ma_beta, model, ma_ckpt[0])
                 bias_denoise_encoder = update_moving_average(args.ma_beta, bias_denoise_encoder, ma_ckpt[1])
                 classifier = update_moving_average(args.ma_beta, classifier, ma_ckpt[2])
-                projector = update_moving_average(args.ma_beta, projector, ma_ckpt[3])
 
         # print info
         if (idx + 1) % args.print_freq == 0:
@@ -401,9 +373,6 @@ def validate(val_loader, model, bias_denoise_encoder, classifier, criterion, arg
                 images = images.squeeze(1)
                 denoise_images, denoise_feature = bias_denoise_encoder(images)
                 denoise_images = denoise_images.unsqueeze(1)
-                # features, denoise_feature  = model(denoise_images)
-                # output = classifier(features)
-                # loss = criterion[0](output, labels)
                 features = model(denoise_images)
                 output = classifier(features)
                 denoise_loss = criterion[1](denoise_feature, labels)
@@ -469,7 +438,7 @@ def main():
         best_acc = [0, 0, 0]  # Specificity, Sensitivity, Score
 
     train_loader, val_loader, args = set_loader(args)
-    model, bias_denoise_encoder, classifier, projector, criterion, optimizer = set_model(args)
+    model, bias_denoise_encoder, classifier, criterion, optimizer = set_model(args)
 
     if args.resume:
         if os.path.isfile(args.resume):
@@ -485,9 +454,6 @@ def main():
             print("=> no checkpoint found at '{}'".format(args.resume))
     else:
         args.start_epoch = 1
-
-    # use mix_precision:
-    #scaler = torch.cuda.amp.GradScaler()
     
     print('*' * 20)
     if not args.eval:
@@ -497,7 +463,7 @@ def main():
 
             # train for one epoch
             time1 = time.time()
-            loss, acc = train(train_loader, model, bias_denoise_encoder, classifier, projector, criterion, optimizer, epoch, args)
+            loss, acc = train(train_loader, model, bias_denoise_encoder, classifier, criterion, optimizer, epoch, args)
             time2 = time.time()
             print('Train epoch {}, total time {:.2f}, accuracy:{:.2f}'.format(
                 epoch, time2-time1, acc))
