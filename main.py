@@ -58,7 +58,7 @@ def parse_args():
 
     # dataset
     parser.add_argument('--dataset', type=str, default='icbhi')
-    parser.add_argument('--data_folder', type=str, default='/home/respiration/Desktop/DGY/RSC-LoRA/data/ICBHI/ICBHI_final_database')
+    parser.add_argument('--data_folder', type=str, default='./ICBHI/ICBHI_final_database')
     parser.add_argument('--batch_size', type=int, default=8)
     parser.add_argument('--num_workers', type=int, default=8)
     # icbhi dataset
@@ -114,7 +114,7 @@ def parse_args():
                         help='moving average value')
     parser.add_argument('--audioset_pretrained', default=True,
                         help='load from audioset-pretrained model')
-    parser.add_argument("--audioset_ckpt", type=str, default="/home/respiration/Desktop/DGY/respire_classfiction/MVST-main/pretrained_models/audioset_10_10_0.4593.pth",
+    parser.add_argument("--audioset_ckpt", type=str, default="./audioset_10_10_0.4593.pth",
                     help="Path to the AudioSet+ImageNet pretrained checkpoint for AST")
 
     args = parser.parse_args(args=[])
