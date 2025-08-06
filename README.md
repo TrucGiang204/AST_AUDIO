@@ -35,15 +35,15 @@ You can download the pretrained AST model from [Hugging Face](https://huggingfac
 After downloading, you can set the path to the checkpoint file by assigning it to args.audioset_ckpt. For example:```args.audioset_ckpt = '/path/to/ast-finetuned-audioset-10-10-0.4593.pth'```
 
 
-### 3. 🧠 Start training
-Our code is based on PyTorch. Please install these required packages from their official sources. We include our versions below for reference, but other versions might also work.
+### 3. 🧠 Start Training
 
-```
-# Main packages for training
-pytorch=2.0.1
-cuda=11.7
-torchaudio=2.0.1
-```
+Our code is implemented in **PyTorch**. Please install the required packages listed in the `requirements.txt` file. The versions we use are shown below for reference, though other versions may also work:```torch==2.0.1,torchaudio==2.0.1,cuda==11.7```
+
+
+The training script supports argument-based configuration. You can modify the parameters of the **Adaptive Differential Denoising (ADD)** layer via command-line arguments，such `--denoise_d_model`,`--denoise_num_heads` and `loss_beta`. The backbone model can also be specified using the `--model` argument.
+
+
+
 
 ### 4. 📊 Comparison of Our Method with State-of-the-Art on the ICBHI Dataset
 ####  4.1 🧠Comparison of CNN-based Methods on the ICBHI Dataset
