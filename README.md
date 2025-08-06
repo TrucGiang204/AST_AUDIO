@@ -55,6 +55,7 @@ torchaudio=2.0.1
 | CoTuning [26]                | 79.34    | 37.24    | 58.29    | Interspeech    |
 | Chang *et al.* [27]          | 69.92    | 35.85    | 52.89    | Interspeech    |
 | SCL [28]                     | 75.95    | 39.15    | 57.55    | Interspeech    |
+|------------------------------|----------|----------|----------|----------------|
 | **Ours (ResNet50)**          | **83.76**| **34.18**| **58.97**| Interspeech    |
 | AFT on Mixed-500 [5]         | 80.72    | 42.86    | 61.79    | Interspeech    |
 | AST Fine-tuning [9]          | 77.14    | 41.97    | 59.55    | Interspeech    |
@@ -67,6 +68,7 @@ torchaudio=2.0.1
 | MVST [31]                    | 80.60    | 44.39    | 62.50    | Interspeech    |
 | LungAdapter [32]            | 80.43    | 44.37    | 62.40    | Interspeech    |
 | CycleGuardian [33]           | 82.06    | 44.47    | 63.26    | Interspeech    |
+|------------------------------|----------|----------|----------|----------------|
 | **Ours (AST)**               | **85.13**| **45.94**| **65.53**| Interspeech    |
 
 
