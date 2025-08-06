@@ -1,4 +1,4 @@
-# ADD4RSC
+# Adaptive Differential Denoising for Respiratory Sounds Classification(Interspeech 2025)
 This repo contains the code and models for our paper: 
 
 Dong Gaoyang, Zhang Zhicheng, Sun Ping and Zhang Minghui, "Adaptive Differential Denoising for Respiratory Sounds Classification", and **accepted at Interspeech 2025**. 📑 <a href="https://arxiv.org/pdf/2506.02505">Paper</a>
@@ -13,8 +13,6 @@ Automated respiratory sound classification faces practical challenges from backg
 
 
 ## 🚀 Getting Started
-
-
 
 ### 1. 📦 Download and prepare audio data
 - **Download**: ICBHI 2017 Respiratory Sound Database [Official Challenge Page](https://bhichallenge.med.auth.gr/ICBHI_2017_Challenge), set Path: After downloading and extracting the dataset, set the path to the data folder using the --data_folder argument. For example:```args.audioset_ckpt = './data/ICBHI/ICBHI_final_database'```
@@ -40,7 +38,7 @@ To start training, simply run: ```python main.py```
 
 
 ### 4. 📊 Comparison of Our Method with State-of-the-Art on the ICBHI Dataset
-  **4.1 Comparison of CNN-based Methods on the ICBHI Dataset**
+  - **Comparison of CNN-based Methods on the ICBHI Dataset**
   | CNN Model                    | $S_p$(%) | $S_e$(%) | Score(%) | Publication    |
   |-----------------------------|----------|----------|----------|----------------|
   | LungRN+NL              | 63.20    | 41.32    | 52.26    | BioCAS 2019    |
@@ -52,7 +50,7 @@ To start training, simply run: ```python main.py```
   | SCL                    | 75.95    | 39.15    | 57.55    | WASPAA 2023          |
   | **Ours (ResNet50)**         | **83.76**| **34.18**| **58.97**| Interspeech 2025    |
 
-  **4.2 Comparison of Transformer-based Methods on the ICBHI Dataset**
+  - **Comparison of Transformer-based Methods on the ICBHI Dataset**
   | Transformer Model           | $S_p$(%) | $S_e$(%) | Score(%) | Publication    |
   |-----------------------------|----------|----------|----------|----------------|
   | AFT on Mixed-500         | 80.72    | 42.86    | 61.79    | NeurIPS Workshop 2023          |
