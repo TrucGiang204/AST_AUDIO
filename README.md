@@ -63,7 +63,7 @@ To start training, simply run: ```python main.py```
 |-----------------------------|----------|----------|----------|----------------|
 | AFT on Mixed-500         | 80.72    | 42.86    | 61.79    | NeurIPS Workshop 2023          |
 | AST Fine-tuning          | 77.14    | 41.97    | 59.55    | nterspeech 2023   |
-| Patch-Mix CL             | 81.66    | 43.07    | 62.37    | Interspeech 2023          |
+| Patch-Mix CL             | 81.66    | 43.07    | 62.37    | Interspeech 2023   |
 | M2D                    | 81.51    | 45.08    | 63.29    | TASLP  |
 | DAT                     | 77.11    | 42.50    | 59.81    | ICASSP 2024          |
 | SG-SCL                   | 79.87    | 43.55    | 61.71    | ICASSP 2024          |
