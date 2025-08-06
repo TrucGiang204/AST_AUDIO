@@ -48,7 +48,7 @@ To start training, simply run: ```python main.py```
   | CoTuning                | 79.34    | 37.24    | 58.29    | IEEE TBE       |
   | Chang *et al.*          | 69.92    | 35.85    | 52.89    | Interspeech 2022|
   | SCL                    | 75.95    | 39.15    | 57.55    | WASPAA 2023          |
-  | **Ours (ResNet50)**         | **83.76**| **34.18**| **58.97**| Interspeech 2025    |
+  | **Ours (ResNet50)**         | **83.76**| **34.18**| **58.97**| **Interspeech 2025**    |
 
   **Comparison of Transformer-based Methods on the ICBHI Dataset**
   | Transformer Model           | $S_p$(%) | $S_e$(%) | Score(%) | Publication    |
@@ -64,7 +64,7 @@ To start training, simply run: ```python main.py```
   | MVST                   | 80.60    | 44.39    | 62.50    | ICASSP 2024    |
   | LungAdapter            | 80.43    | 44.37    | 62.40    | Interspeech 2024|
   | CycleGuardian           | 82.06    | 44.47    | 63.26    | Complex&Intelligent System  |
-  | **Ours (AST)**              | **85.13**| **45.94**| **65.53**| Interspeech 2025   |
+  | **Ours (AST)**              | **85.13**| **45.94**| **65.53**| **Interspeech 2025**   |
 
 
 ## 📚 Citation
