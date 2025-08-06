@@ -42,37 +42,37 @@ Our code is implemented in **PyTorch**. Please install the required packages lis
 
 The training script supports argument-based configuration. You can modify the parameters of the **Adaptive Differential Denoising (ADD)** layer via command-line arguments，such `--denoise_d_model`,`--denoise_num_heads` and `loss_beta`. The backbone model can also be specified using the `--model` argument.
 
-
+To start training, simply run: ```python main.py```
 
 
 ### 4. 📊 Comparison of Our Method with State-of-the-Art on the ICBHI Dataset
 ####  4.1 🧠Comparison of CNN-based Methods on the ICBHI Dataset
 | CNN Model                    | $S_p$(%) | $S_e$(%) | Score(%) | Publication    |
 |-----------------------------|----------|----------|----------|----------------|
-| LungRN+NL [25]              | 63.20    | 41.32    | 52.26    | Interspeech    |
-| RespireNet [3]              | 72.30    | 40.10    | 56.20    | Interspeech    |
-| Wang *et al.* [7] (Splice)  | 70.40    | 40.20    | 55.30    | Interspeech    |
-| StochNorm [26]              | 78.86    | 36.40    | 57.63    | Interspeech    |
-| CoTuning [26]               | 79.34    | 37.24    | 58.29    | Interspeech    |
-| Chang *et al.* [27]         | 69.92    | 35.85    | 52.89    | Interspeech    |
-| SCL [28]                    | 75.95    | 39.15    | 57.55    | Interspeech    |
-| **Ours (ResNet50)**         | **83.76**| **34.18**| **58.97**| Interspeech    |
+| LungRN+NL              | 63.20    | 41.32    | 52.26    | BioCAS 2019    |
+| RespireNet               | 72.30    | 40.10    | 56.20    | EMBC 2021      |
+| Wang *et al.*  (Splice)  | 70.40    | 40.20    | 55.30    | ICASSP 2022    |
+| StochNorm               | 78.86    | 36.40    | 57.63    | IEEE TBE       |
+| CoTuning                | 79.34    | 37.24    | 58.29    | IEEE TBE       |
+| Chang *et al.*          | 69.92    | 35.85    | 52.89    | Interspeech 2022|
+| SCL                    | 75.95    | 39.15    | 57.55    | WASPAA 2023          |
+| **Ours (ResNet50)**         | **83.76**| **34.18**| **58.97**| Interspeech 2025    |
 
 #### 🚀 4.2 Comparison of Transformer-based Methods on the ICBHI Dataset
 | Transformer Model           | $S_p$(%) | $S_e$(%) | Score(%) | Publication    |
 |-----------------------------|----------|----------|----------|----------------|
-| AFT on Mixed-500 [5]        | 80.72    | 42.86    | 61.79    | Interspeech    |
-| AST Fine-tuning [9]         | 77.14    | 41.97    | 59.55    | Interspeech    |
-| Patch-Mix CL [9]            | 81.66    | 43.07    | 62.37    | Interspeech    |
-| M2D [29]                    | 81.51    | 45.08    | 63.29    | Interspeech    |
-| DAT [8]                     | 77.11    | 42.50    | 59.81    | Interspeech    |
-| SG-SCL [8]                  | 79.87    | 43.55    | 61.71    | Interspeech    |
-| RepAugment [4]              | 82.47    | 40.55    | 61.51    | Interspeech    |
-| BTS [30]                    | 81.40    | 45.67    | 63.54    | Interspeech    |
-| MVST [31]                   | 80.60    | 44.39    | 62.50    | Interspeech    |
-| LungAdapter [32]           | 80.43    | 44.37    | 62.40    | Interspeech    |
-| CycleGuardian [33]          | 82.06    | 44.47    | 63.26    | Interspeech    |
-| **Ours (AST)**              | **85.13**| **45.94**| **65.53**| Interspeech    |
+| AFT on Mixed-500         | 80.72    | 42.86    | 61.79    | NeurIPS Workshop 2023          |
+| AST Fine-tuning          | 77.14    | 41.97    | 59.55    | nterspeech 2023   |
+| Patch-Mix CL             | 81.66    | 43.07    | 62.37    | Interspeech 2023          |
+| M2D                    | 81.51    | 45.08    | 63.29    | TASLP  |
+| DAT                     | 77.11    | 42.50    | 59.81    | ICASSP 2024          |
+| SG-SCL                   | 79.87    | 43.55    | 61.71    | ICASSP 2024          |
+| RepAugment               | 82.47    | 40.55    | 61.51    | EMBC 2024          |
+| BTS                    | 81.40    | 45.67    | 63.54    | Interspeech 2024|
+| MVST                   | 80.60    | 44.39    | 62.50    | ICASSP 2024    |
+| LungAdapter            | 80.43    | 44.37    | 62.40    | Interspeech 2024|
+| CycleGuardian           | 82.06    | 44.47    | 63.26    | Complex&Intelligent System  |
+| **Ours (AST)**              | **85.13**| **45.94**| **65.53**| Interspeech 2025   |
 
 
 ## 📚 Citation
