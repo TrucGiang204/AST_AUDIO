@@ -32,6 +32,7 @@ Automated respiratory sound classification faces practical challenges from backg
 
 ### 2. 🤖 Download pre-trained model
 You can download the pretrained AST model from [Hugging Face](https://huggingface.co/MIT/ast-finetuned-audioset-10-10-0.4593).
+After downloading, you can set the path to the checkpoint file by assigning it to args.audioset_ckpt. For example:```args.audioset_ckpt = '/path/to/ast-finetuned-audioset-10-10-0.4593.pth'```
 
 
 ### 3. 🧠 Start training
