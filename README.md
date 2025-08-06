@@ -38,7 +38,7 @@ To start training, simply run: ```python main.py```
 
 
 ### 4. 📊 Comparison of Our Method with State-of-the-Art on the ICBHI Dataset
-  - **Comparison of CNN-based Methods on the ICBHI Dataset**
+  **Comparison of CNN-based Methods on the ICBHI Dataset**
   | CNN Model                    | $S_p$(%) | $S_e$(%) | Score(%) | Publication    |
   |-----------------------------|----------|----------|----------|----------------|
   | LungRN+NL              | 63.20    | 41.32    | 52.26    | BioCAS 2019    |
@@ -50,7 +50,7 @@ To start training, simply run: ```python main.py```
   | SCL                    | 75.95    | 39.15    | 57.55    | WASPAA 2023          |
   | **Ours (ResNet50)**         | **83.76**| **34.18**| **58.97**| Interspeech 2025    |
 
-  - **Comparison of Transformer-based Methods on the ICBHI Dataset**
+  **Comparison of Transformer-based Methods on the ICBHI Dataset**
   | Transformer Model           | $S_p$(%) | $S_e$(%) | Score(%) | Publication    |
   |-----------------------------|----------|----------|----------|----------------|
   | AFT on Mixed-500         | 80.72    | 42.86    | 61.79    | NeurIPS Workshop 2023          |
