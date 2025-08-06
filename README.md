@@ -88,5 +88,13 @@ Please cite related papers if you use ADD4RSC.
 }
 ```
 
-## Acknowledgments
+## 🙏 Acknowledgments
+
+We would like to thank the following contributors and communities:
+
+- The [patch-mix_contrastive_learning](https://github.com/raymin0223/patch-mix_contrastive_learning) repository for related code and inspiration.
+- The [FunASR community](https://github.com/alibaba-damo-academy/FunASR) for their open-source contributions and support.
+- The [Adaptive frequency filters as efficient global token mixers](https://github.com/sunpro108/AdaptiveFrequencyFilters) repository for related code and inspiration.
+
+Their work and codebases provided valuable foundations for our implementation.
 
