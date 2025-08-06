@@ -1,12 +1,10 @@
 # ADD4RSC
-<p align="center">
-    &nbsp&nbsp📑 <a href="https://arxiv.org/pdf/2506.02505">Paper</a>&nbsp&nbsp |
-</p>
-
 This repo contains the code and models for our paper: 
 
 Dong Gaoyang, Zhang Zhicheng, Sun Ping and Zhang Minghui, "Adaptive Differential Denoising for Respiratory Sounds Classification", and **accepted at Interspeech 2025**.
-[[arXiv](https://arxiv.org/pdf/2506.02505)]
+<p>
+    📑 <a href="https://arxiv.org/pdf/2506.02505">Paper</a>
+</p>
 
 
 ## Overview
