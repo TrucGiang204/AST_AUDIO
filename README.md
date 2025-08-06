@@ -57,6 +57,8 @@ torchaudio=2.0.1
 | SCL [28]                     | 75.95    | 39.15    | 57.55    | Interspeech    |
 | **Ours (ResNet50)**          | **83.76**| **34.18**| **58.97**| Interspeech    |
 |------------------------------|----------|----------|----------|----------------|
+
+| Model                         | $S_p$(%) | $S_e$(%) | Score(%) | Publication   |
 | AFT on Mixed-500 [5]         | 80.72    | 42.86    | 61.79    | Interspeech    |
 | AST Fine-tuning [9]          | 77.14    | 41.97    | 59.55    | Interspeech    |
 | Patch-Mix CL [9]             | 81.66    | 43.07    | 62.37    | Interspeech    |
