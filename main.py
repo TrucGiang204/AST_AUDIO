@@ -1,3 +1,29 @@
+"""
+Enhanced ADD-RSC (Adaptive Denoising Diffusion with Respiratory Sound Classification)
+with AudioLDM synthetic data generation for class imbalance handling.
+
+Usage with AudioLDM for synthetic data generation:
+    python main.py --use_audioldm --audioldm_model_id cvssp/audioldm-s-full-v2 \
+                   --synthetic_data_dir ./synthetic_respiratory_data \
+                   --augmentation_ratio 0.5 --target_classes 1,2,3 \
+                   --balance_ratio 0.8
+
+Arguments for AudioLDM:
+    --use_audioldm: Enable AudioLDM synthetic data generation
+    --audioldm_model_id: AudioLDM model ID (default: cvssp/audioldm-s-full-v2)
+    --synthetic_data_dir: Directory for synthetic data (auto-created if not exists)
+    --augmentation_ratio: Ratio of synthetic to original samples (default: 0.5)
+    --target_classes: Classes to augment - 1=crackles, 2=wheezes, 3=both (default: 1,2,3)
+    --balance_ratio: Target balance ratio relative to max class (default: 0.8)
+
+The system will automatically:
+1. Analyze class imbalance in training data
+2. Generate AudioLDM-based synthetic samples for target classes
+3. Create proper annotations for synthetic data
+4. Integrate synthetic samples into training pipeline
+5. Optimize class balance using intelligent sampling strategy
+"""
+
 from copy import deepcopy
 import os
 import sys
@@ -17,6 +43,7 @@ from torchvision import transforms
 from models.resnet import ResNet50
 from models.ast import ASTModel
 from util.icbhi_dataset import ICBHIDataset
+from util.icbhi_synthetic_dataset import ICBHISyntheticDataset, create_enhanced_dataset
 from util.icbhi_util import get_score
 from util.augmentation import SpecAugment
 from util.misc import adjust_learning_rate, warmup_learning_rate, set_optimizer, update_moving_average
@@ -94,6 +121,20 @@ def parse_args():
                         help='policy (argument values) for SpecAugment')
     parser.add_argument('--specaug_mask', type=str, default='mean', 
                         help='specaug mask value', choices=['mean', 'zero'])
+
+    # AudioLDM synthetic data generation
+    parser.add_argument('--use_audioldm', action='store_true',
+                        help='enable AudioLDM synthetic data generation for class balancing')
+    parser.add_argument('--audioldm_model_id', type=str, default='cvssp/audioldm-s-full-v2',
+                        help='AudioLDM model ID for synthetic data generation')
+    parser.add_argument('--synthetic_data_dir', type=str, default=None,
+                        help='directory to load/save synthetic audio data')
+    parser.add_argument('--augmentation_ratio', type=float, default=0.5,
+                        help='ratio of synthetic to original samples for class balancing')
+    parser.add_argument('--target_classes', type=str, default='1,2,3',
+                        help='comma-separated list of class indices to augment (1=crackles, 2=wheezes, 3=both)')
+    parser.add_argument('--balance_ratio', type=float, default=0.8,
+                        help='target balance ratio relative to max class count')
 
     # denoise model
     parser.add_argument("--denoise_d_model", type=int, default=256, help="Hidden size of the denoising transformer")
@@ -183,8 +224,39 @@ def set_loader(args):
         train_transform = transforms.Compose(train_transform)
         val_transform = transforms.Compose(val_transform)
 
-        train_dataset = ICBHIDataset(train_flag=True, transform=train_transform, args=args, print_flag=True)
-        val_dataset = ICBHIDataset(train_flag=False, transform=val_transform, args=args, print_flag=True)
+        # Parse target classes for AudioLDM
+        if hasattr(args, 'target_classes'):
+            args.target_classes_list = [int(x.strip()) for x in args.target_classes.split(',')]
+        else:
+            args.target_classes_list = [1, 2, 3]
+
+        # Use enhanced dataset with AudioLDM if enabled
+        if args.use_audioldm:
+            print("="*60)
+            print("INITIALIZING ENHANCED DATASET WITH AUDIOLDM")
+            print("="*60)
+            
+            train_dataset = create_enhanced_dataset(
+                train_flag=True,
+                transform=train_transform,
+                args=args,
+                synthetic_data_dir=args.synthetic_data_dir,
+                augmentation_ratio=args.augmentation_ratio,
+                generate_on_demand=True,
+                audioldm_model_id=args.audioldm_model_id,
+                print_flag=True
+            )
+            
+            # Validation dataset remains unchanged
+            val_dataset = ICBHIDataset(train_flag=False, transform=val_transform, args=args, print_flag=True)
+            
+            print("="*60)
+            print("AUDIOLDM INTEGRATION COMPLETED")
+            print("="*60)
+        else:
+            # Use standard datasets
+            train_dataset = ICBHIDataset(train_flag=True, transform=train_transform, args=args, print_flag=True)
+            val_dataset = ICBHIDataset(train_flag=False, transform=val_transform, args=args, print_flag=True)
 
         # for weighted_loss
         args.class_nums = train_dataset.class_nums
@@ -493,5 +565,68 @@ def main():
 
     update_json('%s' % args.model_name, best_acc, path=os.path.join(args.save_dir, 'results.json'))
 
+def example_audioldm_usage():
+    """
+    Example function demonstrating how to use AudioLDM with ADD-RSC model.
+    This function shows the complete workflow for synthetic data generation and training.
+    """
+    print("="*60)
+    print("EXAMPLE: AUDIOLDM WITH ADD-RSC FOR RESPIRATORY SOUND CLASSIFICATION")
+    print("="*60)
+    
+    # Example arguments for AudioLDM-enhanced training
+    example_args = {
+        'use_audioldm': True,
+        'audioldm_model_id': 'cvssp/audioldm-s-full-v2',
+        'synthetic_data_dir': './synthetic_respiratory_data',
+        'augmentation_ratio': 0.5,
+        'target_classes': '1,2,3',  # Crackles, Wheezes, Both
+        'balance_ratio': 0.8,
+        'dataset': 'icbhi',
+        'n_cls': 4,
+        'class_split': 'lungsound',
+        'data_folder': './icbhi_dataset',
+        'sample_rate': 16000,
+        'desired_length': 8,
+        'nfft': 1024,
+        'n_mels': 128,
+        'batch_size': 32,
+        'learning_rate': 5e-5,
+        'epochs': 50
+    }
+    
+    print("Example command for training with AudioLDM:")
+    print("python main.py \\")
+    for key, value in example_args.items():
+        if isinstance(value, bool):
+            if value:
+                print(f"    --{key} \\")
+        else:
+            print(f"    --{key} {value} \\")
+    
+    print("\nThis will:")
+    print("1. Analyze original dataset class distribution")
+    print("2. Calculate augmentation needs for imbalanced classes")
+    print("3. Generate synthetic respiratory sounds using AudioLDM")
+    print("4. Create proper annotations for synthetic data")
+    print("5. Integrate synthetic samples into training pipeline")
+    print("6. Train ADD-RSC model with balanced dataset")
+    
+    print("\nClass mapping:")
+    print("  Class 0: Normal")
+    print("  Class 1: Crackles (will be augmented)")
+    print("  Class 2: Wheezes (will be augmented)")
+    print("  Class 3: Both (will be augmented)")
+    
+    print("="*60)
+
 if __name__ == '__main__':
+    # Check if we should show example or run training
+    import sys
+    if len(sys.argv) == 1 or '--help' in sys.argv or '--example' in sys.argv:
+        example_audioldm_usage()
+        if '--example' in sys.argv:
+            exit(0)
+    
+    # Run the actual training
     main()
