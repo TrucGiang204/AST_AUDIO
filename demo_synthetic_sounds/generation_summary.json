@@ -1,0 +1,29 @@
+{
+  "1": {
+    "num_generated": 200,
+    "generated_files": [
+      "./demo_synthetic_sounds/class_1_crackles/synthetic_crackles_20250807_122258_0000.wav",
+      "./demo_synthetic_sounds/class_1_crackles/synthetic_crackles_20250807_122258_0001.wav",
+      "./demo_synthetic_sounds/class_1_crackles/synthetic_crackles_20250807_122258_0002.wav"
+    ],
+    "annotation_file": "./demo_synthetic_sounds/annotations/synthetic_crackles_annotations.txt"
+  },
+  "2": {
+    "num_generated": 200,
+    "generated_files": [
+      "./demo_synthetic_sounds/class_2_wheezes/synthetic_wheezes_20250807_122258_0000.wav",
+      "./demo_synthetic_sounds/class_2_wheezes/synthetic_wheezes_20250807_122258_0001.wav",
+      "./demo_synthetic_sounds/class_2_wheezes/synthetic_wheezes_20250807_122258_0002.wav"
+    ],
+    "annotation_file": "./demo_synthetic_sounds/annotations/synthetic_wheezes_annotations.txt"
+  },
+  "3": {
+    "num_generated": 200,
+    "generated_files": [
+      "./demo_synthetic_sounds/class_3_both/synthetic_both_20250807_122258_0000.wav",
+      "./demo_synthetic_sounds/class_3_both/synthetic_both_20250807_122258_0001.wav",
+      "./demo_synthetic_sounds/class_3_both/synthetic_both_20250807_122258_0002.wav"
+    ],
+    "annotation_file": "./demo_synthetic_sounds/annotations/synthetic_both_annotations.txt"
+  }
+}
